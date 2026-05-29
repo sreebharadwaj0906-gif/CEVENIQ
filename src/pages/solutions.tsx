@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Link } from "wouter";
 
 export default function Solutions() {
   const categories = [
@@ -35,7 +34,10 @@ export default function Solutions() {
         <div className="container mx-auto px-4">
           {categories.map((cat, i) => (
             <div key={i} className="mb-20 last:mb-0">
-              <div className="flex items-center gap-4 mb-10"><h2 className="text-2xl md:text-3xl font-bold">{cat.name}</h2><div className="flex-1 h-px bg-white/10"></div></div>
+              <div className="flex items-center gap-4 mb-10">
+                <h2 className="text-2xl md:text-3xl font-bold">{cat.name}</h2>
+                <div className="flex-1 h-px bg-white/10"></div>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {cat.items.map((sol, j) => (
                   <motion.div key={j} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: j * 0.1 }} className="bg-white/5 border border-white/10 p-8 rounded-2xl hover:border-cyan-400/50 transition-all group flex flex-col h-full">
@@ -51,7 +53,15 @@ export default function Solutions() {
           ))}
         </div>
       </section>
-      <section className="py-24 bg-[#060d1a] border-t border-white/5 relative overflow-hidden">
-        <div classNa **...**
-
-_This response is too long to display in full._
+      <section className="py-24 bg-[#060d1a] border-t border-white/5">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Operations?</h2>
+          <p className="text-xl text-white/70 max-w-2xl mx-auto mb-10">Let our experts design the right solution for your industrial challenges.</p>
+          <a href="/contact" className="inline-flex items-center gap-2 bg-cyan-500 text-black font-bold px-8 py-4 rounded-full hover:bg-cyan-400 transition-all">
+            Talk to an Expert
+          </a>
+        </div>
+      </section>
+    </div>
+  );
+}
