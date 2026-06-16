@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { 
@@ -87,7 +88,54 @@ const insightsPreview = [
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
+      <Helmet>
+        <title>
+          CEVENIQ Strategic Solutions | Cost Engineering & Automation Consulting
+        </title>
+
+        <meta
+          name="description"
+          content="CEVENIQ Strategic Solutions provides Cost Engineering, Warehouse Automation Consulting, Strategic Sourcing, Procurement Advisory, Value Engineering, and Industrial Training services."
+        />
+
+        <meta
+          name="keywords"
+          content="Cost Engineering, Warehouse Automation, Strategic Sourcing, Procurement Consulting, Value Engineering, Industrial Automation, CapEx Optimization, Procurement Training"
+        />
+
+        <meta
+          property="og:title"
+          content="CEVENIQ Strategic Solutions"
+        />
+
+        <meta
+          property="og:description"
+          content="Engineering intelligence meets commercial strategy through automation consulting, cost optimization, and procurement excellence."
+        />
+
+        <meta
+          property="og:type"
+          content="website"
+        />
+
+        <meta
+          property="og:url"
+          content="https://www.ceveniq.com/"
+        />
+
+        <meta
+          property="og:image"
+          content="https://www.ceveniq.com/opengraph.jpg"
+        />
+
+        <link
+          rel="canonical"
+          href="https://www.ceveniq.com/"
+        />
+      </Helmet>
+
+      <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center pt-20 overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -400,7 +448,8 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
-      </section>
+     </section>
     </div>
+    </>
   );
 }
