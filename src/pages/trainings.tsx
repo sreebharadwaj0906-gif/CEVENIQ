@@ -40,7 +40,9 @@ export default function Trainings() {
               <div className="p-4 bg-cyan-900/20 border border-cyan-500/20 rounded-xl mb-8 relative z-10">
                 <p className="text-sm font-medium text-cyan-100 italic">"Helping organizations reduce unnecessary CapEx spends through engineering-driven procurement intelligence."</p>
               </div>
-              <Link href="/contact" className="block text-center w-full py-4 bg-white/10 hover:bg-white/20 rounded-full font-bold transition-colors relative z-10">Request Workshop Info</Link>
+              <Link href="/contact?type=procurement" className="block text-center w-full py-4 bg-white/10 hover:bg-white/20 rounded-full font-bold transition-colors relative z-10">
+  Request Workshop Info
+</Link>
             </motion.div>
             
             <motion.div 
@@ -67,7 +69,9 @@ export default function Trainings() {
               <div className="p-4 bg-cyan-900/20 border border-cyan-500/20 rounded-xl mb-8 relative z-10">
                 <p className="text-sm font-medium text-cyan-100 italic">"In modern industries, commercial intelligence is becoming equally important as technical knowledge."</p>
               </div>
-              <Link href="/contact" className="block text-center w-full py-4 bg-white/10 hover:bg-white/20 rounded-full font-bold transition-colors relative z-10">View Student Programs</Link>
+              <Link href="/contact?type=students" className="block text-center w-full py-4 bg-white/10 hover:bg-white/20 rounded-full font-bold transition-colors relative z-10">
+  View Student Programs
+</Link>
             </motion.div>
 
             <motion.div 
@@ -94,7 +98,9 @@ export default function Trainings() {
               <div className="p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl mb-8 relative z-10">
                 <p className="text-sm font-bold text-cyan-300 italic">"Helping organizations unlock significant CapEx savings through intelligent engineering and procurement decisions."</p>
               </div>
-              <Link href="/contact" className="block text-center w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black rounded-full font-bold transition-colors relative z-10">Consult With Us</Link>
+              <Link href="/contact?type=advisory" className="block text-center w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black rounded-full font-bold transition-colors relative z-10">
+  Consult With Us
+</Link>
             </motion.div>
           </div>
           

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { CheckCircle2, Mail, Phone, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
@@ -34,6 +35,37 @@ const formSchema = z.object({
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [location] = useLocation();
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const enquiryType = queryParams.get("type");
+  const companyLabel =
+  enquiryType === "students"
+    ? "College / University Name *"
+    : "Company Name *";
+
+const designationLabel =
+  enquiryType === "students"
+    ? "Role / Position *"
+    : "Designation / Title *";
+
+  const pageTitle =
+    enquiryType === "procurement"
+      ? "Request a Corporate Workshop"
+      : enquiryType === "students"
+      ? "Student Program Enquiry"
+      : enquiryType === "advisory"
+      ? "Industrial Advisory Consultation"
+      : "Let's Talk Strategy.";
+
+  const pageDescription =
+    enquiryType === "procurement"
+      ? "Tell us about your procurement team and workshop requirements."
+      : enquiryType === "students"
+      ? "Tell us about your institution and student development needs."
+      : enquiryType === "advisory"
+      ? "Let's discuss your industrial automation and cost optimization goals."
+      : "Ready to transform your industrial operations? Reach out to schedule a consultation.";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,22 +84,38 @@ export default function Contact() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Form data:", values);
-    // Simulate API call
-    setTimeout(() => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  try {
+    const response = await fetch(
+      "https://formsubmit.co/ajax/askme@ceveniq.com",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(values),
+      }
+    );
+
+    if (response.ok) {
       setSubmitted(true);
-    }, 800);
-  };
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <div className="flex flex-col min-h-screen pt-20">
       <section className="py-24 bg-[#060d1a] border-b border-white/5">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Let's Talk Strategy.</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+  {pageTitle}
+</h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
-            Ready to transform your industrial operations? Reach out to schedule a consultation with our engineering and commercial experts.
-          </p>
+  {pageDescription}
+</p>
         </div>
       </section>
 
@@ -138,7 +186,9 @@ export default function Contact() {
                 <div className="bg-[#060d1a] border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none"></div>
                   
-                  <h3 className="text-2xl font-bold mb-8">Request a Consultation</h3>
+                  <h3 className="text-2xl font-bold mb-8">
+  {pageTitle}
+</h3>
                   
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 relative z-10">
@@ -148,7 +198,7 @@ export default function Contact() {
                           <FormItem>
                             <FormLabel className="text-white/80">Full Name *</FormLabel>
                             <FormControl>
-                              <Input placeholder="John Doe" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
+                              <Input placeholder="First Name Last Name" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -156,9 +206,11 @@ export default function Contact() {
 
                         <FormField control={form.control} name="companyName" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Company Name *</FormLabel>
+                            <FormLabel className="text-white/80">
+  {companyLabel}
+</FormLabel>
                             <FormControl>
-                              <Input placeholder="Acme Corp" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
+                              <Input placeholder="ABC College of Engineering" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -168,9 +220,11 @@ export default function Contact() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormField control={form.control} name="designation" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Designation / Title *</FormLabel>
+                            <FormLabel className="text-white/80">
+  {designationLabel}
+</FormLabel>
                             <FormControl>
-                              <Input placeholder="Supply Chain Director" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
+                              <Input placeholder="Principal/ Dean" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -178,9 +232,9 @@ export default function Contact() {
 
                         <FormField control={form.control} name="email" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Business Email *</FormLabel>
+                            <FormLabel className="text-white/80">Official Email *</FormLabel>
                             <FormControl>
-                              <Input type="email" placeholder="john@acmecorp.com" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
+                              <Input type="email" placeholder="xyz@university.com" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -192,7 +246,7 @@ export default function Contact() {
                           <FormItem>
                             <FormLabel className="text-white/80">Phone Number *</FormLabel>
                             <FormControl>
-                              <Input type="tel" placeholder="+1 (555) 000-0000" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
+                              <Input type="tel" placeholder="+91 9876543210" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -202,7 +256,7 @@ export default function Contact() {
                           <FormItem>
                             <FormLabel className="text-white/80">Country *</FormLabel>
                             <FormControl>
-                              <Input placeholder="United States" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
+                              <Input placeholder="India" className="bg-black/40 border-white/10 h-12 text-base focus-visible:ring-cyan-500" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -212,24 +266,47 @@ export default function Contact() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormField control={form.control} name="industry" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Industry *</FormLabel>
+                            <FormLabel className="text-white/80">
+  {enquiryType === "students"
+    ? "Institution Type *"
+    : "Industry *"}
+</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger className="bg-black/40 border-white/10 h-12 text-base focus:ring-cyan-500">
-                                  <SelectValue placeholder="Select Industry" />
+                                  <SelectValue
+  placeholder={
+    enquiryType === "students"
+      ? "Select Institution Type"
+      : "Select Industry"
+  }
+/>
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent className="bg-[#0a1220] border-white/10">
-                                <SelectItem value="ecommerce">Ecommerce</SelectItem>
-                                <SelectItem value="warehousing">Warehousing & Logistics</SelectItem>
-                                <SelectItem value="retail">Retail</SelectItem>
-                                <SelectItem value="fmcg">FMCG</SelectItem>
-                                <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                                <SelectItem value="automotive">Automotive</SelectItem>
-                                <SelectItem value="pharma">Pharmaceuticals</SelectItem>
-                                <SelectItem value="airports">Airports</SelectItem>
-                                <SelectItem value="infrastructure">Infrastructure</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
+                                {enquiryType === "students" ? (
+  <>
+    <SelectItem value="engineering-college">Engineering College</SelectItem>
+    <SelectItem value="deemed-university">Deemed University</SelectItem>
+    <SelectItem value="private-university">Private University</SelectItem>
+    <SelectItem value="management-institute">Management Institute</SelectItem>
+    <SelectItem value="polytechnic">Polytechnic</SelectItem>
+    <SelectItem value="other">Other</SelectItem>
+  </>
+) : (
+  <>
+    <SelectItem value="ecommerce">Ecommerce</SelectItem>
+    <SelectItem value="warehousing">Warehousing & Logistics</SelectItem>
+    <SelectItem value="retail">Retail</SelectItem>
+    <SelectItem value="fmcg">FMCG</SelectItem>
+    <SelectItem value="manufacturing">Manufacturing</SelectItem>
+    <SelectItem value="automotive">Automotive</SelectItem>
+    <SelectItem value="pharma">Pharmaceuticals</SelectItem>
+    <SelectItem value="airports">Airports</SelectItem>
+    <SelectItem value="infrastructure">Infrastructure</SelectItem>
+    <SelectItem value="other">Other</SelectItem>
+  </>
+)}
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -238,22 +315,62 @@ export default function Contact() {
 
                         <FormField control={form.control} name="projectType" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Project Type *</FormLabel>
+                            <FormLabel className="text-white/80">
+  {enquiryType === "students"
+    ? "Program Interest *"
+    : "Project Type *"}
+</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger className="bg-black/40 border-white/10 h-12 text-base focus:ring-cyan-500">
-                                  <SelectValue placeholder="Select Project Type" />
+                                  <SelectValue
+  placeholder={
+    enquiryType === "students"
+      ? "Select Program Interest"
+      : "Select Project Type"
+  }
+/>
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent className="bg-[#0a1220] border-white/10">
-                                <SelectItem value="consulting">Automation Consulting</SelectItem>
-                                <SelectItem value="integration">System Integration</SelectItem>
-                                <SelectItem value="deployment">Deployment & Commissioning</SelectItem>
-                                <SelectItem value="sourcing">Strategic Sourcing</SelectItem>
-                                <SelectItem value="cost-engineering">Cost Engineering</SelectItem>
-                                <SelectItem value="training">Training</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                              </SelectContent>
+  {enquiryType === "students" ? (
+    <>
+      <SelectItem value="career-readiness">
+        Career Readiness Program
+      </SelectItem>
+
+      <SelectItem value="industrial-awareness">
+        Industrial Awareness Workshop
+      </SelectItem>
+
+      <SelectItem value="automation-fundamentals">
+        Automation Fundamentals
+      </SelectItem>
+
+      <SelectItem value="supply-chain-fundamentals">
+        Supply Chain Fundamentals
+      </SelectItem>
+
+      <SelectItem value="guest-lecture">
+        Guest Lecture Session
+      </SelectItem>
+
+      <SelectItem value="custom-program">
+        Custom Program
+      </SelectItem>
+    </>
+  ) : (
+    <>
+      <SelectItem value="consulting">Automation Consulting</SelectItem>
+      <SelectItem value="integration">System Integration</SelectItem>
+      <SelectItem value="deployment">Deployment & Commissioning</SelectItem>
+      <SelectItem value="sourcing">Strategic Sourcing</SelectItem>
+      <SelectItem value="cost-engineering">Cost Engineering</SelectItem>
+      <SelectItem value="training">Training</SelectItem>
+      <SelectItem value="other">Other</SelectItem>
+    </>
+  )}
+</SelectContent>
                             </Select>
                             <FormMessage />
                           </FormItem>
@@ -263,19 +380,55 @@ export default function Contact() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormField control={form.control} name="budgetRange" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Budget Range *</FormLabel>
+                            <FormLabel className="text-white/80">
+  {enquiryType === "students"
+    ? "Expected Participants *"
+    : "Budget Range *"}
+</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger className="bg-black/40 border-white/10 h-12 text-base focus:ring-cyan-500">
-                                  <SelectValue placeholder="Select Budget" />
+                                  <SelectValue
+  placeholder={
+    enquiryType === "students"
+      ? "Select Student Count"
+      : "Select Budget"
+  }
+/>
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent className="bg-[#0a1220] border-white/10">
-                                <SelectItem value="under-50k">&lt; $50K</SelectItem>
-                                <SelectItem value="50k-200k">$50K – $200K</SelectItem>
-                                <SelectItem value="200k-500k">$200K – $500K</SelectItem>
-                                <SelectItem value="over-500k">$500K+</SelectItem>
-                                <SelectItem value="not-sure">Not Sure</SelectItem>
+                                {enquiryType === "students" ? (
+  <>
+    <SelectItem value="under-50">
+      Under 50 Students
+    </SelectItem>
+
+    <SelectItem value="50-100">
+      50 - 100 Students
+    </SelectItem>
+
+    <SelectItem value="100-250">
+      100 - 250 Students
+    </SelectItem>
+
+    <SelectItem value="250-500">
+      250 - 500 Students
+    </SelectItem>
+
+    <SelectItem value="500-plus">
+      More than 500 Students
+    </SelectItem>
+  </>
+) : (
+  <>
+    <SelectItem value="under-50k">&lt; $50K</SelectItem>
+    <SelectItem value="50k-200k">$50K – $200K</SelectItem>
+    <SelectItem value="200k-500k">$200K – $500K</SelectItem>
+    <SelectItem value="over-500k">$500K+</SelectItem>
+    <SelectItem value="not-sure">Not Sure</SelectItem>
+  </>
+)}
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -284,19 +437,59 @@ export default function Contact() {
 
                         <FormField control={form.control} name="timeline" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Project Timeline *</FormLabel>
+                            <FormLabel className="text-white/80">
+  {enquiryType === "students"
+    ? "Preferred Program Timeline *"
+    : "Project Timeline *"}
+</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger className="bg-black/40 border-white/10 h-12 text-base focus:ring-cyan-500">
-                                  <SelectValue placeholder="Select Timeline" />
+                                  <SelectValue
+  placeholder={
+    enquiryType === "students"
+      ? "Select Program Timeline"
+      : "Select Timeline"
+  }
+/>
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent className="bg-[#0a1220] border-white/10">
-                                <SelectItem value="immediate">Immediate</SelectItem>
-                                <SelectItem value="1-3-months">1-3 months</SelectItem>
-                                <SelectItem value="3-6-months">3-6 months</SelectItem>
-                                <SelectItem value="6-12-months">6-12 months</SelectItem>
-                                <SelectItem value="planning">Planning Phase</SelectItem>
+                                {enquiryType === "students" ? (
+  <>
+    <SelectItem value="immediate">
+      Immediate Discussion
+    </SelectItem>
+
+    <SelectItem value="within-30-days">
+      Within 30 Days
+    </SelectItem>
+
+    <SelectItem value="within-90-days">
+      Within 90 Days
+    </SelectItem>
+
+    <SelectItem value="current-semester">
+      Current Semester
+    </SelectItem>
+
+    <SelectItem value="next-semester">
+      Next Semester
+    </SelectItem>
+
+    <SelectItem value="exploring">
+      Exploring Opportunities
+    </SelectItem>
+  </>
+) : (
+  <>
+    <SelectItem value="immediate">Immediate</SelectItem>
+    <SelectItem value="1-3-months">1-3 months</SelectItem>
+    <SelectItem value="3-6-months">3-6 months</SelectItem>
+    <SelectItem value="6-12-months">6-12 months</SelectItem>
+    <SelectItem value="planning">Planning Phase</SelectItem>
+  </>
+)}
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -306,7 +499,7 @@ export default function Contact() {
 
                       <FormField control={form.control} name="challenges" render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Current Challenges & Requirements *</FormLabel>
+                            <FormLabel className="text-white/80">Objectives / Learning Outcomes Expected *</FormLabel>
                             <FormControl>
                               <Textarea 
                                 placeholder="Please describe what you are looking to achieve..." 
