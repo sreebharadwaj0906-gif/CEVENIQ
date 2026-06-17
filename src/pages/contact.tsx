@@ -84,21 +84,37 @@ const designationLabel =
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  try {
-    const response = await fetch(
-      "https://formsubmit.co/ajax/askme@ceveniq.com",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(values),
-      }
-    );
+  const response = await fetch(
+  "https://formsubmit.co/ajax/askme@ceveniq.com",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      ...values,
+
+      _subject: `New ${enquiryType || "Website"} Enquiry - CEVENIQ`,
+      _template: "table",
+
+      enquiryType: enquiryType || "general",
+    }),
+  }
+);
+console.log("Status:", response.status);
+
+const result = await response.json();
+
+console.log(result);
+
+if (response.ok) {
+  console.log("SUCCESS");
+  setSubmitted(true);
+}
 
     if (response.ok) {
+      console.log("SUCCESS");
       setSubmitted(true);
     }
   } catch (error) {
